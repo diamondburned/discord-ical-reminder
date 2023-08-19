@@ -1,0 +1,9 @@
+{
+  "timezone": "America/Los_Angeles",
+  "calendars": [],
+  "refresh_frequency": "30m",
+  "event_notifications": [
+    "0s",
+    "30m"
+  ]
+}
