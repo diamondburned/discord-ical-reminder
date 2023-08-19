@@ -17,6 +17,7 @@ import (
 
 	"github.com/diamondburned/arikawa/v3/api/webhook"
 	"github.com/diamondburned/arikawa/v3/discord"
+	"github.com/hako/durafmt"
 	"github.com/pkg/errors"
 	"github.com/tj/go-naturaldate"
 	"golang.org/x/sync/errgroup"
@@ -295,27 +296,8 @@ func createNotificationMessage(cal *trackedCalendar, notification calendar.Notif
 }
 
 func humanDuration(d time.Duration) string {
-	d = d.Round(time.Minute)
-
-	var s strings.Builder
-	if d > time.Hour {
-		h := d / time.Hour
-		d -= h * time.Hour
-		if h == 1 {
-			fmt.Fprintf(&s, "%d hour ", h)
-		} else {
-			fmt.Fprintf(&s, "%d hours ", h)
-		}
-	}
-	if d > time.Minute {
-		m := d / time.Minute
-		d -= m * time.Minute
-		if m == 1 {
-			fmt.Fprintf(&s, "%d minute ", m)
-		} else {
-			fmt.Fprintf(&s, "%d minutes ", m)
-		}
-	}
-
-	return strings.TrimSpace(s.String())
+	fmt := durafmt.Parse(d)
+	fmt = fmt.LimitToUnit("days")
+	fmt = fmt.LimitFirstN(2)
+	return fmt.String()
 }
