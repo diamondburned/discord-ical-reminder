@@ -1,6 +1,12 @@
 {
   "timezone": "America/Los_Angeles",
-  "calendars": [],
+  "calendars": [
+    {
+      "ical_url": "",
+      "webhook_url": "",
+      "message_template": ""
+    }
+  ],
   "refresh_frequency": "30m",
   "event_notifications": [
     "0s",
