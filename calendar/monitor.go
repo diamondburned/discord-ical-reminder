@@ -120,11 +120,9 @@ func (n *Notifier) notifyingEvents(start, end time.Time) []notifyingEvent {
 	defer n.mu.Unlock()
 
 	for cal := range n.state.Calendars {
-		slog.Debug("searching calendar", "calendar", cal)
 		events := cal.EventsBetween(start, end, n.opts.EventsOpts)
 
 		for _, ev := range events {
-			slog.Debug("event found", "event", ev.Summary)
 			if len(ev.Reminders) == 0 {
 				continue
 			}
@@ -164,12 +162,6 @@ func (n *Notifier) notifications(start, end time.Time) []Notification {
 	slices.SortFunc(notifications, func(a, b Notification) int {
 		return CompareTime(a.RemindedAt, b.RemindedAt)
 	})
-
-	for _, notification := range notifications {
-		slog.Debug("notification queued",
-			"event", notification.Event.Summary,
-			"reminded_at", notification.RemindedAt)
-	}
 
 	return notifications
 }
