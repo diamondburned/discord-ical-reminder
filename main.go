@@ -97,10 +97,7 @@ func run(ctx context.Context) error {
 			ExcludeCancelled:      true,
 			ParseReminder:         newDiscordRemindersParser(ctx),
 		},
-		// Don't skip past notifications in case the bot goes down.
-		// Don't restart the bot too often, or else the bot will spam
-		// notifications.
-		SkipPastNotifications: false,
+		SkipPastNotifications: true,
 	})
 	notifier.Update(func(state *calendar.NotifierState) {
 		for _, calendar := range calendars {
