@@ -271,7 +271,7 @@ func createNotificationMessage(cal *trackedCalendar, notification calendar.Notif
 			},
 			{
 				Name:   "Duration",
-				Value:  humanDuration(notification.Event.StartsAt.Sub(notification.Event.EndsAt)),
+				Value:  humanDuration(notification.Event.EndsAt.Sub(notification.Event.StartsAt)),
 				Inline: true,
 			},
 		},
