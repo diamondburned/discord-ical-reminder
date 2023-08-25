@@ -1,12 +1,12 @@
 package calendar
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
-	"reflect"
 	"slices"
 	"sync/atomic"
 	"time"
@@ -68,8 +68,17 @@ func (c *ICSCalendar) Equals(x *ICSCalendar) bool {
 	if c == nil || x == nil {
 		return false
 	}
-	// This should work, but the safest way is still to marshal and compare.
-	return reflect.DeepEqual(c.ical, x.ical)
+
+	var cBytes bytes.Buffer
+	var xBytes bytes.Buffer
+
+	err1 := ical.NewEncoder(&cBytes).Encode(c.ical)
+	err2 := ical.NewEncoder(&xBytes).Encode(x.ical)
+	if err1 != nil || err2 != nil {
+		return false
+	}
+
+	return bytes.Equal(cBytes.Bytes(), xBytes.Bytes())
 }
 
 // EventsBetween implements Calendar.EventsBetween.
@@ -78,7 +87,10 @@ func (c *ICSCalendar) EventsBetween(start, end time.Time, opts EventsOpts) []Eve
 		panic("start and end must have the same location")
 	}
 
-	slog.Debug("ics: searching events between %v and %v", start, end)
+	slog.Debug(
+		"ics: searching events between %v and %v",
+		"start", start,
+		"end", end)
 
 	location := start.Location()
 	chosenEvents := make([]Event, 0, 8)
